@@ -3,6 +3,7 @@ import os
 import time
 import requests
 import json
+from bs4 import BeautifulSoup
 
 app = Flask(__name__)
 
@@ -26,17 +27,22 @@ def index():
         if len(j["businesses"]) > 0:
             b = j["businesses"][0]["id"]
             business = j["businesses"][0]
-            print(business)
+            #print(business)
             review_url = f'https://api.yelp.com/v3/businesses/{b}/reviews'
             resp_rev = requests.get(review_url, headers=auth)
             r = resp_rev.json()
             reviews = dict()
             for r in r["reviews"]:
                 reviews[r["text"]] = r["rating"]
-            print(reviews)
+            #print(reviews)
             a = j["businesses"][0]["alias"]
             scrape_url = f"https://yelp.com/biz/{a}"
-            
+            scrape = requests.get(scrape_url)
+            #print(scrape.text)
+            soup = BeautifulSoup(scrape.text, 'html.parser')
+
+            ul = soup.find_all(class_=" review__373c0__3MsBX border-color--default__373c0__1WKlL")
+            print(ul)
             #names = j["businesses"]
             #print(scrape_url)
             #ret = keywords + str(lat) + str(lon)
