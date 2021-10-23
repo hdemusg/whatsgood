@@ -5,6 +5,13 @@
       "firebase.json",
       "**/.*",
       "**/node_modules/**"
-    ]
+    ],
+    "rewrites": [{
+      "source": "**",
+      "run": {
+        "region": "us-east1",
+        "serviceId": "mangeons"
+      }
+    }]
   }
 }

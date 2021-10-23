@@ -20,22 +20,21 @@
     <!-- Nav tabs -->
     <ul class="nav nav-tabs" style="background-color: #a466a4" id="navId">
       <li class="nav-item">
-        <a href="#" class="nav-link" style="color: white;"><b>mangeons</b></a>
+        <a href="" class="nav-link" style="color: white;"><b>mangeons</b></a>
       </li>
     </ul>
     <div class="jumbotron" style="background-color: #5d385d; color: white;">
-      <h1 class="display-3">Welcome!</h1>
-      <p class="lead">We use data from Yelp and machine learning to help you find the good items at a restaurant.</p>
+      <h1 class="display-3">{{ context.name }}</h1>
+      <p class="lead">{{ context.address }}</p>
       <hr class="my-2">
       <div class="container">
-        <div class="form-group">
-          <p>Select a restaurant to get started.</p>
-            <form class="row" action="/" method="post">
-              <input id="keyword" name="keyword" type="text" class="col-sm-9 form-control form-control-dark" placeholder="Search for restaurants..." aria label="Search">
-              <button type="submit" style="background-color: black;" class="col-sm-3 btn btn-primary">Mangeons!</button>
-              <input id="lat" name="lat" style="visibility: hidden" value="33.777156" />
-              <input id="lon" name="lon" style="visibility: hidden" value="-84.396202" />
-            </form>
+        <div class="jumbotron" style="background-color: #e2cfe2; color: black;">
+          <h4>Menu</h4>
+          <hr class="my-2">
+          {% for review in context.reviews %}
+             <p>{{ review }}</p>
+          {% endfor %}
+          
         </div>
       </div>
     </div>
