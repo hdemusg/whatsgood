@@ -44,7 +44,6 @@ def getReviews(id):
     ret.headers['Cache-Control'] = 'public, max-age=300, s-maxage=600'
     return ret
 
-
 '''
 @app.route('/results',methods=['POST'])
 def res():

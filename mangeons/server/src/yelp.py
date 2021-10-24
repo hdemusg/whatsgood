@@ -3,6 +3,7 @@ import bs4
 from concurrent.futures import ProcessPoolExecutor
 from requests import Session
 from requests_futures.sessions import FuturesSession
+from pipeline import Pipeline
 
 session = FuturesSession(executor=ProcessPoolExecutor(max_workers=10),
                          session=Session())
@@ -94,9 +95,9 @@ def getBizDetailsAndReviews(id):
     alias = details['alias']
     reviews = asyncio.run(getBizReviewsAsync(alias))
     details.update(reviews)
-    import json
-    with open('reviews.json', 'w') as f:
-        f.write(json.dumps(details))
+    p = Pipeline()
+    sum = p.process(details)
+    details.update(sum)
     return details
 
 
