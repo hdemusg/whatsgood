@@ -3,6 +3,7 @@ import bs4
 from concurrent.futures import ProcessPoolExecutor
 from requests import Session
 from requests_futures.sessions import FuturesSession
+import pprint
 from pipeline import Pipeline
 
 session = FuturesSession(executor=ProcessPoolExecutor(max_workers=10),
@@ -51,14 +52,14 @@ def getBizStars(soup):
     star_elem = soup.select('div.photo-header-content__373c0__2P1Jy div.i-stars__373c0___sZu0')
     return parseStarLabel(star_elem[0])
 
-@cachefunc
+# @cachefunc
 async def getBizInfo(id):
     URL = f'https://api.yelp.com/v3/businesses/{id}'
     details = session.get(URL, headers=headers).result().json()
     return details
-
-async def getBizReviewsAsync(alias):
-    pages = await getAllPages(alias)
+@cachefunc
+def getBizReviewsAsync(alias):
+    pages = asyncio.run(getAllPages(alias))
     soups = [bs4.BeautifulSoup(page, 'html.parser') for page in pages]
     reviews = getBizReviews(soups)
     return {"reviews": reviews}
@@ -89,15 +90,43 @@ def search_businesses(search_term, location):
     params = {"term": search_term, "latitude": lat, "longitude": long}
     return session.get(URL, params=params, headers=headers).result().json()
 
+def procCategories(cat):
+    catlist = []
+    c = cat['categories']
+    for key in c:
+        items = c[key]['items']
+        ilist = []
+        for ikey in items:
+            newi = {
+                'name': ikey,
+                'count': items[ikey]['count'],
+                'stars': round(items[ikey]['stars'], 2)
+            }
+            print(newi)
+            ilist.append(newi)
+        newcat = {
+            'name': key,
+            'count': c[key]['count'],
+            'items': ilist,
+            'stars': round(c[key]['stars'], 2)
+        }
+        catlist.append(newcat)
+    pprint.pprint(catlist)
+    return {'categories': catlist}
+
 @cachefunc
 def getBizDetailsAndReviews(id):
     details = getBizDetails(id)
     alias = details['alias']
-    reviews = asyncio.run(getBizReviewsAsync(alias))
+    reviews = getBizReviewsAsync(alias)
     details.update(reviews)
     p = Pipeline()
-    sum = p.process(details)
-    details.update(sum)
+    # cats = {'categories': {'appetizers': {'stars': 2.0, 'count': 1, 'items': {'starter kielbasa sausage': {'stars': 2.0, 'count': 1}}}, 'entrees': {'stars': 4.0, 'count': 2, 'items': {'sausage platter': {'stars': 4.5, 'count': 1}, 'breakfast platter': {'stars': 3.5, 'count': 1}}}, 'sides': {'stars': 0, 'count': 0, 'items': {}}, 'desserts': {'stars': 3.3333333333333335, 'count': 3, 'items': {'german chocolate cake': {'stars': 3.3333333333333335, 'count': 3}}}, 'drinks': {'stars': 3.25, 'count': 2, 'items': {'beer': {'stars': 3.25, 'count': 2}}}, 'specials': {'stars': 3.5, 'count': 1, 'items': {'soda of the day': {'stars': 3.5, 'count': 1}}}}}
+    cats = p.process(details)
+    pcats = procCategories(cats)
+    pprint.pprint(pcats)
+    details.update(pcats)
+    # print(details)
     return details
 
 

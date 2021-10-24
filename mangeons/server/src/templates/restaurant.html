@@ -5,11 +5,25 @@
     <div class="container col-md-8">
       
       <div class="text-content-container px-4 pt-3">
-      <h2 class="display-3">{{ context.name }} ({{ context.stars }}/5 stars)</h1>
+      <h2 class="display-3">{{ context.name }}<h2>
+        <h3>{{ context.stars }}/5 stars</h3>
         <div class="col-md-8">
           <p class="lead">{{ context.address }}</p>
           <hr class="my-2">
           <h4>Menu</h4>
+          <ul>
+            {% for cat in context.categories %}
+              <li><h5>{{ cat.name }} ({{cat.stars }}/5 stars, {{cat.count}} reviews)</h5>
+                <ul>
+                  {% for item in cat['items'] %}
+                  <li>{{ item.name }} ({{item.stars | string}}/5 stars, {{item.count}} reviews)</li>
+                  {% endfor %}
+                </ul>
+              </li>
+            {% endfor %}
+          </ul>
+          <hr class="my-2">
+          <h4>Reviews</h4>
           <hr class="my-2">
           {% for review in context.reviews %}
           <p>{{ review.stars }}</p>

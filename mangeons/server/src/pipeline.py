@@ -23,6 +23,7 @@ class Pipeline:
       return list(cleaned_phrases.dropna())
 
     def noun_phrases_2_embeds(self, phrases_list):
+      print(phrases_list)
       embeddings = self.c2v_model.vectorize_words(phrases_list)
       return embeddings
 
@@ -73,7 +74,13 @@ class Pipeline:
             review['categories'] = {'appetizers': 0, 'entrees': 0, 'sides': 0, 'desserts': 0, 'drinks': 0,
                                     'specials': 0}
 
-            preds = self.mul_clf.predict(self.noun_phrases_2_embeds(review['menu_items']))
+            if review['menu_items']:
+                print(review['menu_items'])
+                embeddings = self.noun_phrases_2_embeds(review['menu_items'])
+
+                preds = self.mul_clf.predict(embeddings)
+            else:
+                preds = []
             """if review['menu_items'][1] == 'german chocolate cake':
                 preds = ['drinks', 'desserts', 'entrees']
             if review['menu_items'][1] == 'breakfast platter':
