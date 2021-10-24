@@ -1,64 +1,32 @@
-from flask import Flask, request, render_template, make_response
+from re import split
+from flask import Flask, request, redirect, render_template, make_response
 import os
 import time
 import requests
 import json
 from bs4 import BeautifulSoup
+from werkzeug.utils import redirect
+
+import yelp
 
 app = Flask(__name__)
-
-token = "gWjr-4eZ8Edx6-nhNLg4OORGUy9JeqHQH5h0sJ78NzLiMxljSN_kqphbhfwzTpc8ghEjRCfp0pWRGiCC38msbeZkpqbtOJfVbEQER6rpHDZLcEeLP4aDb5_-ZzN0YXYx"
-auth = {'Authorization': 'Bearer ' + token}
 
 def format_server_time():
     server_time = time.localtime()
     return time.strftime("%I:%M:%S %p", server_time)
 
-@app.post('/')
+@app.route('/search', methods=['GET'])
 def index_post():
-    d = request.form.to_dict()
-    keywords = d['keyword']
-    lat = float(d['lat'])
-    lon = float(d['lon'])
-    params = {"term": keywords, "latitude": lat, "longitude": lon}
-    response = requests.get('https://api.yelp.com/v3/businesses/search', params=params, headers=auth)
-    j = response.json()
-    if len(j["businesses"]) > 0:
-        b = j["businesses"][0]["id"]
-        business = j["businesses"][0]
-        #print(business)
-        review_url = f'https://api.yelp.com/v3/businesses/{b}/reviews'
-        resp_rev = requests.get(review_url, headers=auth)
-        r = resp_rev.json()
-        reviews = dict()
-        for r in r["reviews"]:
-            reviews[r["text"]] = r["rating"]
-        #print(reviews)
-        a = j["businesses"][0]["alias"]
-        scrape_url = f"https://yelp.com/biz/{a}"
-        scrape = requests.get(scrape_url)
-        #print(scrape.text)
-        soup = BeautifulSoup(scrape.text, 'html.parser')
+    keywords = request.args.get('searchterm')
+    lat = float(request.args.get('lat'))
+    long = float(request.args.get('long'))
 
-        ul = soup.find_all(class_=" review__373c0__3MsBX border-color--default__373c0__1WKlL")
-        print(ul)
-        #names = j["businesses"]
-        #print(scrape_url)
-        #ret = keywords + str(lat) + str(lon)
-        add = business['location']["display_address"]
-        address = ""
-        for a in add[:-1]:
-            #print(a)
-            address += a + " "
-        address = address[:-1]
-        address += ', ' + add[-1]
-        context = {'name': business["name"], 'address': address, 'reviews': reviews.keys()}
-        template = render_template('results.html', context=context)
-        ret = make_response(template)
-        ret.headers['Cache-Control'] = 'public, max-age=300, s-maxage=600'
-        return ret
-    else:
-        return "No results found."
+    search_results = yelp.search_businesses(keywords, (lat, long))
+    businesses = search_results['businesses']
+
+    page = render_template('results.html', context=search_results)
+    response = make_response(page)
+    return response
 
 @app.get('/')
 def index():
@@ -68,17 +36,14 @@ def index():
     response.headers['Cache-Control'] = 'public, max-age=300, s-maxage=600'
     return response
 
-@app.get('/get-name/<id>')
-def getName(id):
-    url = f"https://api.yelp.com/v3/businesses/{id}"
-    response = requests.get(url, headers=auth)
-    j = response.json()
-    b = j["name"]
-    a = j["alias"]
-    print(a)
-    return b
+@app.get('/biz/<id>')
+def getReviews(id):
+    details = yelp.getBizDetailsAndReviews(id)
+    template = render_template('restaurant.html', context=details)
+    ret = make_response(template)
+    ret.headers['Cache-Control'] = 'public, max-age=300, s-maxage=600'
+    return ret
 
-    #SsO1q915qPriqziI90ZmOA
 
 '''
 @app.route('/results',methods=['POST'])
@@ -88,5 +53,4 @@ def res():
 if __name__ == "__main__":
     #app.run(debug=True,host='0.0.0.0',port=int(os.environ.get('PORT', 8080)))
     app.run(debug=True)
-    print("asdf"*100)
 

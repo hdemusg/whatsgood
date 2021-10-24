@@ -1,103 +1,17 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <title>mangeons</title>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic&display=swap" rel="stylesheet">
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-  </head>
-  <style>
-    * {
-      font-family: 'Nanum Gothic', sans-serif;
-    }
-  </style>
-  <body style="background-color: black">
-    <!-- Nav tabs -->
-    <ul class="nav nav-tabs" style="background-color: #a466a4" id="navId">
-      <li class="nav-item">
-        <a href="#" class="nav-link" style="color: white;"><b>mangeons</b></a>
-      </li>
-    </ul>
-    <div class="jumbotron" style="background-color: #5d385d; color: white;">
-      <h1 class="display-3">Welcome!</h1>
-      <p class="lead">We use data from Yelp and machine learning to help you find the good items at a restaurant.</p>
-      <hr class="my-2">
+{% extends "template.html" %}
+{% block body %}
       <div class="container">
         <div class="form-group">
           <p>Select a restaurant to get started.</p>
-            <form class="row" action="/" method="post">
-              <input id="keyword" name="keyword" type="text" class="col-sm-9 form-control form-control-dark" placeholder="Search for restaurants..." aria label="Search">
-              <button type="submit" style="background-color: black;" class="col-sm-3 btn btn-primary">Mangeons!</button>
+            <form class="row" action="/search" method="get">
+              <div class="input-group mb-3">
+                <input type="text" class="form-control" name="searchterm" placeholder="Look for restaurants near you" aria-label="search Term" aria-describedby="button-addon1">
+                <button class="btn btn-outline-secondary" type="submit" id="button-addon2" aria-describedby="button-addon1">Search!</button>
+              </div>
               <input id="lat" name="lat" style="visibility: hidden" value="33.777156" />
-              <input id="lon" name="lon" style="visibility: hidden" value="-84.396202" />
+              <input id="long" name="long" style="visibility: hidden" value="-84.396202" />
             </form>
         </div>
       </div>
     </div>
-    <!-- Tab panes -->
-    <div class="tab-content">
-      <div class="tab-pane fade show active" id="tab1Id" role="tabpanel"></div>
-      <div class="tab-pane fade" id="tab2Id" role="tabpanel"></div>
-      <div class="tab-pane fade" id="tab3Id" role="tabpanel"></div>
-      <div class="tab-pane fade" id="tab4Id" role="tabpanel"></div>
-      <div class="tab-pane fade" id="tab5Id" role="tabpanel"></div>
-    </div>
-    
-    <script>
-    var lat = 33.777156
-    var lon = -84.396202
-
-    function loc() {
-      if (window.navigator.geolocation) {
-        var results = window.navigator.geolocation.getCurrentPosition(changeLoc);
-      } 
-    }
-
-    function changeLoc(position) {
-      lat = position.coords.latitude.toString()
-      lon = position.coords.longitude.toString()
-      console.log(lat + ", " + lon)  
-      document.getElementById("lat").value = lat
-      document.getElementById("lon").value = lon
-    }
-    /**
-    function submit()
-    {
-        var keyword = document.getElementById('keyword').value
-        console.log(keyword)
-        if (window.navigator.geolocation) {
-          var results = window.navigator.geolocation.getCurrentPosition(changeLoc);
-        } 
-        yelpSearch(keyword)
-    }
-
-    function yelpSearch(k) {
-        var url = "https://api.yelp.com/v3/businesses/search"
-        var xmlHttp = new XMLHttpRequest();
-        xmlHttp.open( "GET", url, false ); // false for synchronous request
-        xmlHttp.send( {term: document.getElementById('keyword').value, latitude: lat, longitude: lon} );
-        return xmlHttp.responseText;
-    }
-    */
-
-    window.onload= () => {
-      loc();
-
-      $('#navId a').click(e => {
-        e.preventDefault();
-        $(this).tab('show');
-      });
-    }
-    </script>
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-  </body>
-</html>
+{% endblock %}
