@@ -60,7 +60,7 @@ def index_post():
     else:
         return "No results found."
 
-@app.get('/',methods=['GET', 'POST'])
+@app.get('/')
 def index():
     context = {'server_time': format_server_time()}
     template = render_template('index.html', context=context)
