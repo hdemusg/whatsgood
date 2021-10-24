@@ -59,8 +59,8 @@
     }
 
     function changeLoc(position) {
-      lat = string(position.coords.latitude)
-      lon = string(position.coords.longitude)
+      lat = position.coords.latitude.toString()
+      lon = position.coords.longitude.toString()
       console.log(lat + ", " + lon)  
       document.getElementById("lat").value = lat
       document.getElementById("lon").value = lon
@@ -85,12 +85,14 @@
     }
     */
 
-    window.onload=loc();
+    window.onload= () => {
+      loc();
 
       $('#navId a').click(e => {
         e.preventDefault();
         $(this).tab('show');
       });
+    }
     </script>
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
