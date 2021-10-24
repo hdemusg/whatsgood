@@ -94,9 +94,6 @@ def getBizDetailsAndReviews(id):
     alias = details['alias']
     reviews = asyncio.run(getBizReviewsAsync(alias))
     details.update(reviews)
-    import json
-    with open('reviews.json', 'w') as f:
-        f.write(json.dumps(details))
     return details
 
 
