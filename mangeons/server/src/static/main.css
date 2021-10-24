@@ -1,0 +1,44 @@
+body {
+    
+}
+
+.search-container {
+    background-color: #db5151;
+}
+
+.search-result {
+    list-style-type: none;
+}
+
+h1, h2, h3, h4, h5, h6, .result-name, h1 i, h2 i, h3 i, h4 i, h5 i, h6 i {
+    font-family:Georgia, 'Times New Roman', Times, serif;
+}
+
+.text-content-container {
+    background-color: #ffffff;
+}
+
+.results-list {
+    padding: 0;
+}
+
+nav {
+    background-color: #cf3a3a;
+}
+
+.search-button {
+    background-color: #8c68cd;
+}
+
+
+a.nav-link:hover, a.nav-link:active {
+    color: white;
+    text-decoration: underline;
+}
+a.nav-link {
+    color: white;
+}
+
+.review {
+    text-align: justify;
+}

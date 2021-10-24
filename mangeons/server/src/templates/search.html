@@ -1,0 +1,16 @@
+{% macro nav() %}
+<nav class="nav nav-dark">
+    <a class="nav-link" href="/">Mangeons!</a>
+</nav>
+{% endmacro %}
+
+{% macro search(placeholder) -%}
+<form class="row" action="/search" method="get">
+    <div class="input-group">
+        <input type="text" class="form-control btn-outline-light" name="searchterm" placeholder="{{ placeholder }}" aria-label="Search Term" aria-describedby="button-addon1">
+        <button class="btn btn-outline-light search-button" type="submit" id="button-addon2" aria-describedby="button-addon1">Search!</button>
+    </div>
+    <input id="lat" name="lat" style="display:none" value="33.777156" />
+    <input id="long" name="long" style="display:none" value="-84.396202" />
+</form>
+{%- endmacro %}

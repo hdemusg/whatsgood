@@ -1,16 +1,33 @@
 {% extends "template.html" %}
 {% block title %}Search Results{% endblock %}
 {% block body %}
-<a href="/">Home</a>
-    <ul>
-        {% for business in context.businesses %}
-        <li>
-            <p>
-                <a href="/biz/{{ business.id }}"> {{ business.name }} </a>
-                <span class="biz-stars">{{ business.rating }}</span>
-                <span class="biz-address">{{ business.distance }} meters away</span>
-            </p>
-        </li>
-        {% endfor %}
-    </ul>
+<div class="container col-md-8">
+    <div class="text-content-container px-4 pt-3">
+        <div class="col-md-8">
+
+            <h2>Search Results</h2>
+            <hr>
+            <ul class="results-list">
+                {% for business in context.businesses %}
+                <li class="search-result">
+                    <p>
+                    <div class="result-head">
+                        <h4><a href="/biz/{{ business.id }}" class="result-name"> {{ business.name }}</a> <span class="biz-stars">({{ business.rating }}/5 stars)</span></h4>
+                    </div>
+                    <div class="class">
+                        <span class="biz-address">
+                            {% for line in business.location.display_address %}
+                            {{ line }}
+                            {% endfor %}
+                        </span>
+                        <span class="biz-distand"></span>
+                    </div>
+                </p>
+            </li>
+            <hr class="col-md-4">
+            {% endfor %}
+        </ul>
+    </div>
+    </div>
+</div>
 {% endblock %}

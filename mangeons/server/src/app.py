@@ -1,5 +1,5 @@
 from re import split
-from flask import Flask, request, redirect, render_template, make_response
+from flask import Flask, request, render_template, make_response, send_from_directory
 import os
 import time
 import requests
@@ -9,7 +9,7 @@ from werkzeug.utils import redirect
 
 import yelp
 
-app = Flask(__name__)
+app = Flask(__name__, static_url_path='')
 
 def format_server_time():
     server_time = time.localtime()
@@ -44,11 +44,9 @@ def getReviews(id):
     ret.headers['Cache-Control'] = 'public, max-age=300, s-maxage=600'
     return ret
 
-
-'''
-@app.route('/results',methods=['POST'])
-def res():
-''' 
+@app.route('/static/<path:path>')
+def send_js(path):
+    return send_from_directory('static', path)
 
 if __name__ == "__main__":
     #app.run(debug=True,host='0.0.0.0',port=int(os.environ.get('PORT', 8080)))

@@ -1,17 +1,14 @@
+{% import 'search.html' as search %}
+
 {% extends "template.html" %}
+{% block title %}Mangeons!{% endblock %}
 {% block body %}
-      <div class="container">
-        <div class="form-group">
-          <p>Select a restaurant to get started.</p>
-            <form class="row" action="/search" method="get">
-              <div class="input-group mb-3">
-                <input type="text" class="form-control" name="searchterm" placeholder="Look for restaurants near you" aria-label="search Term" aria-describedby="button-addon1">
-                <button class="btn btn-outline-secondary" type="submit" id="button-addon2" aria-describedby="button-addon1">Search!</button>
-              </div>
-              <input id="lat" name="lat" style="visibility: hidden" value="33.777156" />
-              <input id="long" name="long" style="visibility: hidden" value="-84.396202" />
-            </form>
-        </div>
-      </div>
-    </div>
+<div class="container col-md-8">
+  <div class="text-content-container px-4 pt-3">
+    <h1>What <i>is</i> good, anyway?</h1>
+    <p class="col-md-8">
+      Ever thought to yourself, what's good? Why do people get up in the morning? What is the meaning of it all? Why do I need to brush my teeth today, or wash my clothes, when it all turns to kipple?
+    </p>
+  </div>
+</div>
 {% endblock %}
