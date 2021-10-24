@@ -1,3 +1,9 @@
 Flask
 gunicorn
 requests-futures
+spacy
+texthero
+pandas
+chars2vec
+tensorflow
+sklearn
